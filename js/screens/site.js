@@ -172,6 +172,7 @@
       <h1 class="st-display" id="page-title" tabindex="-1">AI outreach that books you sales meetings.</h1>
       <p class="st-hero-sub">Onbook finds companies with a reason to hear from you and writes to the right people from your own LinkedIn, X and email. It stops the moment anyone replies.</p>
       ${startForm('hero', 'Be first in line. Free until you launch.')}
+      ${OB.socials('is-hero')}
     </section>`;
   }
 

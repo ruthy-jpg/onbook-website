@@ -132,6 +132,13 @@
       ${view.foot ? `<div class="setup-foot"><div class="setup-foot-inner">${view.foot}</div></div>` : ''}`;
   };
 
+  /* Social links (LinkedIn, X, Telegram, Discord) from config.js; used in the homepage hero and the footer */
+  OB.socials = (cls = '') => {
+    const C = window.ONBOOK_CONFIG || {};
+    const list = [['LinkedIn', C.linkedinUrl], ['X', C.xUrl], ['Telegram', C.telegramUrl], ['Discord', C.discordUrl]].filter(([, u]) => u);
+    return list.length ? `<nav class="site-socials ${cls}" aria-label="Onbook on social media">${list.map(([n, u]) => `<a href="${OB.esc(u)}" target="_blank" rel="noopener">${n}</a>`).join('')}</nav>` : '';
+  };
+
   OB.shells.site = (view) => `
     <div class="site-head-wrap"><header class="site-head">
       ${OB.brand('#site', 24)}
@@ -144,6 +151,7 @@
     <main class="site-main" id="main">${view.html}</main>
     <footer class="site-foot"><div class="site-foot-inner">
       <span>Onbook, from Surgence Labs</span>
+      ${OB.socials('is-foot')}
       <a href="#pricing">Pricing</a><a href="#legal.privacy">Privacy</a><a href="#legal.terms">Terms</a><a href="#legal.dpa">Data agreement</a><a href="#legal.subprocessors">Subprocessors</a><a href="#remove-me">Remove me from Onbook</a>
     </div></footer>`;
 

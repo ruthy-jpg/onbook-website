@@ -597,3 +597,10 @@ p.st-notes { display: block; max-width: 62ch; }
 .st-joined { align-items: center; text-align: center; }
 .st-joined-t { display: flex; gap: 8px; align-items: center; justify-content: center; color: var(--green-text); }
 .st-start .st-start-row { justify-content: center; }
+
+/* Social links: LinkedIn, X, Telegram, Discord (hero and footer) */
+.site-socials { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.site-socials a { color: var(--text-2); text-decoration: none; font-size: var(--fs-small); padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; }
+.site-socials a:hover { color: var(--text); border-color: var(--text-2); }
+.site-socials.is-hero { justify-content: center; margin-top: var(--s4); }
+.site-socials.is-foot a { font-size: 13px; }
