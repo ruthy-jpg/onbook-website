@@ -762,9 +762,10 @@
     const done = () => OB.set({ waitlistDone: email, waitlistError: '', waitlistEmail: '' });
     const fail = () => OB.set({ waitlistEmail: email, waitlistError: 'Something went wrong. Please try again in a moment.', waitlistErrorAt: which });
     if (!CFG.waitlistEndpoint) { done(); return; }
-    fetch(CFG.waitlistEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    /* Apps Script web app: a text/plain no-cors POST avoids the CORS preflight; the reply is opaque, so a sent request counts as joined. */
+    fetch(CFG.waitlistEndpoint, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ email, _subject: 'Onbook waitlist signup', source: 'onbook.ai' }) })
-      .then((r) => (r.ok ? done() : fail())).catch(fail);
+      .then(() => done()).catch(fail);
   });
   OB.action('site-join', () => {
     const go = () => { const el = document.getElementById('st-site-hero'); if (el) { window.scrollTo(0, 0); el.focus(); } };
