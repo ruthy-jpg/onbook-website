@@ -1,0 +1,493 @@
+/* Setup (v4, Attio, light only): five steps to launch, the connect dialogs and Day one. Tokens only; classes prefixed su-.
+   Each step opens on Onbook's answer: a work log while it reads or checks, then one card with the result (what Onbook
+   understood, the top five companies, the recommended plan) and "Change" beside the main button. The editors behind
+   "Change" group their forms in white cards with a header row (core .card-flush and .card-head). Values sit in attribute
+   rows: a grey 13px label column and the value beside it. Chosen values are grey tokens. All 100 companies are a record
+   table with column lines, accounts are an integrations list, and the panels beside the content are widget cards. */
+
+/* ---------- Layout: the content, and one column of widgets on the right that stays in view ---------- */
+.su-split { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--s6); align-items: start; }
+.su-split > .su-main { grid-column: 1; grid-row: 1; min-width: 0; }
+.su-split > .su-aside { grid-column: 2; grid-row: 1; min-width: 0; position: sticky; top: calc(56px + var(--s6)); }
+@media (max-width: 960px) {
+  .su-split { grid-template-columns: minmax(0, 1fr); gap: var(--s4); }
+  .su-split > .su-main, .su-split > .su-aside { grid-column: 1; grid-row: auto; position: static; }
+}
+/* The leads list and its building state run full width, up to 1440px, so the record table has room for its columns */
+.setup-main:has(> .su-wide) { max-width: 1440px; }
+.setup-main:has(> .su-wide) ~ .setup-foot .setup-foot-inner { max-width: 1392px; }
+
+/* ---------- Cards ---------- */
+.su-cards { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
+.su-card { scroll-margin-top: calc(56px + var(--s4)); }
+.su-card > .card-head h2 { min-width: 0; }
+.su-head-end { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
+.su-head-btn { margin-left: auto; margin-right: -6px; display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 6px; border: 0; border-radius: 6px; background: transparent; color: var(--text-2); font: 500 13px/1 var(--font-text); letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; }
+.su-head-btn:hover { background: var(--hover); color: var(--text); }
+.card-head .su-head-btn svg { width: 14px; height: 14px; color: currentColor; }
+.su-card-hint { margin: 0; padding: var(--s3) var(--s4) 0; font-size: 13px; line-height: 1.5; color: var(--text-2); }
+.su-card-body { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; padding: var(--s4); }
+.su-card-hint + .su-card-body { padding-top: var(--s3); }
+.su-card-body + .su-card-body { border-top: 1px solid var(--line); }
+.su-card-foot { margin: 0; padding: 10px var(--s4); border-top: 1px solid var(--line); font-size: 13px; line-height: 1.5; color: var(--text-2); }
+.su-fields { gap: var(--s5); }
+
+/* Rows inside a card, hairlines between them */
+.su-rows { display: flex; flex-direction: column; margin: 0; padding: 0; }
+.su-rows > li + li { border-top: 1px solid var(--line); }
+.su-card-hint + .su-rows { margin-top: var(--s3); border-top: 1px solid var(--line); }
+.su-meta { font-size: 13px; line-height: 1.45; color: var(--text-2); }
+
+/* Small parts */
+.su-stat { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 6px; margin: 0; }
+.su-stat-n { font-size: 24px; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; color: var(--text); font-variant-numeric: tabular-nums; }
+.su-num { flex: none; width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--sunken); display: grid; place-items: center; font-size: 11px; font-weight: 600; letter-spacing: 0; color: var(--text-2); }
+.su-edit { flex: none; padding: 0; border: 0; background: none; font: 500 13px/1.5 var(--font-text); letter-spacing: -0.01em; color: var(--text-2); text-decoration: none; white-space: nowrap; cursor: pointer; }
+.su-edit:hover { color: var(--text); text-decoration: underline; text-decoration-color: var(--edge); text-underline-offset: 3px; }
+.su-tile { flex: none; width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; background: var(--surface); color: var(--text); box-shadow: var(--shadow-btn); --mark-cut: var(--surface); }
+.su-label { font-family: var(--font-text); font-size: 13px; font-weight: 600; line-height: 1.4; letter-spacing: -0.005em; color: var(--text); }
+
+/* ---------- Attribute rows: a grey label column, the value beside it, an action on the right ---------- */
+.su-attrs { --su-k: 148px; display: flex; flex-direction: column; margin: 0; padding: 0; }
+.su-attr { display: grid; grid-template-columns: var(--su-k) minmax(0, 1fr) auto; column-gap: var(--s4); align-items: start; min-height: 44px; padding: 10px var(--s4); }
+.su-attr + .su-attr { border-top: 1px solid var(--line); }
+.su-attr-k { margin: 0; padding-top: 1px; font-family: var(--font-text); font-size: 13px; font-weight: 500; line-height: 1.5; letter-spacing: -0.005em; color: var(--text-2); text-wrap: pretty; }
+.su-attr-v { margin: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--s2); font-size: 14px; line-height: 1.5; }
+.su-attr-act { margin: 0; display: flex; align-items: center; justify-content: flex-end; min-height: 21px; }
+.su-attr-hint { font-size: 13px; line-height: 1.45; color: var(--text-2); }
+/* Labels line up with the words in the first row of tokens, or with a 32px field */
+.su-attr-tokens .su-attr-k { padding-top: 4px; }
+.su-attr-tokens .su-attr-act { min-height: 28px; }
+.su-attr-ctl .su-attr-k { padding-top: 6px; }
+@media (max-width: 640px) {
+  .su-attr { grid-template-columns: minmax(0, 1fr) auto; row-gap: 6px; padding: 12px var(--s4); }
+  .su-attr-k, .su-attr-tokens .su-attr-k, .su-attr-ctl .su-attr-k { grid-column: 1; grid-row: 1; padding-top: 0; }
+  .su-attr-act, .su-attr-tokens .su-attr-act { grid-column: 2; grid-row: 1; min-height: 0; }
+  .su-attr-v { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* ---------- Tokens: chosen values on a grey fill, each with its own remove button ---------- */
+.su-tokens { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+.su-token { display: inline-flex; align-items: center; gap: 2px; max-width: 100%; min-height: 26px; padding: 3px 2px 3px 8px; border: 1px solid var(--grey-line); border-radius: var(--r-tag); background: var(--grey-bg); color: var(--text); font-size: 13px; font-weight: 500; line-height: 1.3; overflow-wrap: anywhere; }
+.su-token-static { padding-right: 8px; }
+.su-token-n { margin-right: 5px; font-size: 11px; font-weight: 600; letter-spacing: 0; color: var(--text-2); }
+.su-token-x { position: relative; flex: none; display: inline-grid; place-items: center; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--text-2); cursor: pointer; }
+.su-token-x::after { content: ""; position: absolute; inset: -3px -2px; }
+.su-token-x:hover { background: var(--selected); color: var(--text); }
+.su-token-x svg { width: 12px; height: 12px; }
+/* Suggestions and "Add": grey words with a plus, no box until hovered */
+.su-suggests { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin-left: -6px; }
+.su-suggest { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 6px; border: 0; border-radius: 6px; background: transparent; color: var(--text-2); font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; }
+.su-suggest:hover { background: var(--hover); color: var(--text); }
+.su-suggest svg { flex: none; width: 13px; height: 13px; }
+.su-suggest-add { color: var(--text); }
+@media (pointer: coarse) {
+  .su-token { min-height: 36px; }
+  .su-suggest { height: 36px; }
+  .su-token-x { width: 30px; height: 30px; }
+}
+.su-add { display: flex; gap: var(--s2); align-items: center; flex-wrap: wrap; max-width: 440px; }
+.su-add .input { flex: 1 1 200px; width: auto; min-width: 0; }
+
+/* Row actions show on hover and focus with a mouse, and always on touch screens */
+@media (hover: hover) {
+  .su-reveal { opacity: 0; transition: opacity .12s var(--ease); }
+  .su-row:hover .su-reveal, .su-row:focus-within .su-reveal, .su-reveal[aria-expanded="true"] { opacity: 1; }
+}
+
+/* ---------- The setup bar and footer (the setup shell is used only by setup) ---------- */
+/* The prototype's Screens button sits above the setup footer so it never covers the main button */
+.setup-foot ~ .proto-fab { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+/* The footer's buttons line up with the page's content: 952px wide, 632px on narrow pages (the wide list sets its own) */
+.setup-main ~ .setup-foot .setup-foot-inner { max-width: 952px; }
+.setup-main.is-narrow ~ .setup-foot .setup-foot-inner { max-width: 632px; }
+@media (max-width: 640px) {
+  .su-foot-back { display: none; }
+  .su-q-back { width: var(--control-m); padding: 0; flex: none; }
+  .su-q-back > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+/* Pages don't repeat "Step N of 5", so the current step keeps its name at every width; the others show their number */
+@media (max-width: 1100px) { .setup-steps li:not([aria-current="step"]) .step-name { display: none; } }
+@media (max-width: 720px) { .setup-steps li + li::before { width: 12px; } }
+@media (max-width: 640px) {
+  /* Phones: the page title, its line, then the page's own actions, left-aligned */
+  .setup-main .page-bar { display: contents; }
+  .setup-main .page-titles { order: 1; }
+  .setup-main .page-sub { order: 2; }
+  .setup-main .page-actions { order: 3; align-self: flex-start; margin: var(--s3) 0 0; }
+  .setup-main .page-actions > .btn-ghost:first-child { margin-left: -10px; }
+  .setup-top { gap: var(--s3); }
+  .setup-top .brand { display: none; }
+  .setup-steps { gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .setup-steps::-webkit-scrollbar { display: none; }
+  .setup-steps li { gap: 6px; }
+  .setup-steps li + li::before { display: none; }
+}
+
+/* ---------- 1 Website and sign-up ---------- */
+.su-signup { padding: var(--s5); }
+.su-signup-form { display: flex; flex-direction: column; gap: var(--s5); }
+.su-providers { display: flex; flex-direction: column; gap: var(--s2); }
+.su-providers .btn { height: max(36px, var(--control-m)); }
+.su-site .input-group:has(.input[aria-invalid="true"]) { border-color: var(--error); box-shadow: 0 0 0 3px color-mix(in srgb, var(--error) 12%, transparent); }
+.su-next-list li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--s3); align-items: start; padding: 10px var(--s4); }
+.su-next-list .su-num { margin-top: 1px; }
+.su-next-text { display: flex; flex-direction: column; gap: 1px; font-size: 14px; line-height: 1.45; }
+
+/* ---------- The work as it happens: reading the site (step 2) and checking companies (step 3) ----------
+   One line per thing Onbook does. The line it is on has a cobalt spinner and grey words; a finished line has an ink
+   check, says what Onbook found, and shows any detail under it */
+.su-log-card { padding: var(--s5); }
+.su-log { display: flex; flex-direction: column; gap: var(--s4); margin: 0; padding: 0; }
+.su-log-item { display: grid; grid-template-columns: 20px minmax(0, 1fr); column-gap: var(--s3); align-items: start; }
+.su-log-item[hidden] { display: none; }
+.su-log-mark { width: 20px; height: 20px; margin-top: 1px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; }
+.su-log-mark svg { width: 12px; height: 12px; }
+.su-log-item.is-now .su-log-mark { border-color: var(--accent); border-right-color: transparent; animation: spin 1s linear infinite; }
+.su-log-item.is-done .su-log-mark { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+.su-log-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.su-log-text { font-size: 14px; line-height: 1.5; color: var(--text); }
+.su-log-item.is-now .su-log-text { color: var(--text-2); }
+.su-log-detail { margin-top: -4px; font-size: 13px; line-height: 1.45; color: var(--text-2); }
+.su-log-detail[hidden], .su-log-extra[hidden] { display: none; }
+.su-log-extra { padding: 2px 0 2px; }
+.su-in { animation: su-in .45s var(--ease) both; }
+@keyframes su-in { from { opacity: 0; transform: translateY(3px); } }
+
+/* Client logos as company tiles: the crypto clients, a gap, then the fintech ones */
+.su-logos { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.su-logos-group { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+.su-logos-group li { display: inline-flex; }
+
+/* ---------- 2 What Onbook understood: one record card, a few attribute rows ---------- */
+.su-understood .card-head .co-mark { margin-right: 2px; }
+.su-understood .su-attrs { --su-k: 124px; }
+.su-understood .su-attr { padding: 12px var(--s4); }
+.su-understood .su-attr-v { gap: 4px; }
+.su-understood .su-logos { margin: 6px 0 2px; }
+.su-uproofs { display: flex; flex-direction: column; gap: var(--s3); margin: 0 0 2px; padding: 0; }
+.su-uproof { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--s3); align-items: start; scroll-margin-top: 120px; }
+.su-uproof:focus { outline: none; }
+.su-uproof:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+.su-uproof-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.su-uproof-act { display: flex; align-items: center; justify-content: flex-end; min-height: 21px; }
+.su-uproof-act .btn { margin-top: -3px; }
+
+/* ---------- 2 Company profile ---------- */
+.su-auto { field-sizing: content; min-height: 64px; max-height: 320px; }
+.su-lock { display: inline-flex; align-items: center; gap: 6px; }
+.su-lock svg { color: var(--text-2); }
+.su-size { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; font-size: 14px; }
+.su-size .select { width: auto; min-width: 92px; }
+
+/* Proof points: one row each, the menu on hover */
+.su-proof { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s3); align-items: start; padding: 12px var(--s4); scroll-margin-top: 120px; }
+.su-proof:focus { outline: none; }
+.su-proof:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; border-radius: 4px; }
+.su-proof-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.su-quote { font-size: 14px; line-height: 1.45; color: var(--text); }
+.su-quote-who { color: var(--text-2); }
+.su-proof-check { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) 10px; margin-top: var(--s2); }
+.su-proof-why { flex: 1 1 220px; min-width: 0; }
+.su-proof .su-reveal { margin: -3px -6px 0 0; }
+
+/* The widget beside the profile: what is left before Onbook builds the list */
+.su-check { display: flex; gap: 10px; align-items: flex-start; padding: 12px var(--s4); border-top: 1px solid var(--line); }
+.su-check .dot { margin-top: 6px; }
+.su-check-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+
+/* Companies like these: 10 examples in two columns, each with Good fit and Not a fit */
+.su-examples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px var(--s2); margin: 2px 0 0; padding: 0; list-style: none; }
+.su-example { display: flex; align-items: center; gap: 6px; min-height: 36px; padding: 2px 3px 2px 7px; border: 1px solid var(--line); border-radius: var(--r-btn); background: var(--surface); }
+.su-example-name { flex: 1 1 auto; min-width: 0; font-size: 14px; }
+.su-example .su-ex-btn { flex: none; width: 26px; height: 26px; min-width: 26px; padding: 0; color: var(--text-2); }
+.su-example .su-ex-btn + .su-ex-btn { margin-left: -4px; }
+.su-example .su-ex-btn:hover { color: var(--text); }
+.su-example .su-ex-good[aria-pressed="true"] { color: var(--green-text); background: var(--green-bg); }
+.su-example.is-good { border-color: var(--green-line); }
+.su-meta-lead { margin-bottom: 2px; }
+@media (max-width: 600px) { .su-examples { grid-template-columns: minmax(0, 1fr); } }
+
+/* Proof on the overview: Confirm when it needs it, then Edit and Delete */
+.su-uproof-act { gap: 2px; }
+.su-uproof-act .btn-icon { color: var(--text-2); }
+.su-uproof-act .btn-icon:hover { color: var(--text); }
+@media (max-width: 600px) {
+  .su-uproof { grid-template-columns: minmax(0, 1fr); row-gap: 4px; }
+  .su-uproof-act { justify-content: flex-start; margin-left: -6px; }
+  .su-uproof-act .btn:not(.btn-icon) { margin-left: 6px; }
+}
+.su-ok { display: inline-flex; align-items: center; gap: 3px; color: var(--green-text); }
+
+/* Your offer: a box the customer writes in, and a tip that opens under it */
+.su-offer-box { width: 100%; }
+.su-tip-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: 5px; height: 26px; margin-left: -6px; padding: 0 6px; border: 0; border-radius: 6px; background: transparent; color: var(--text-2); font: 500 13px/1 var(--font-text); letter-spacing: -0.01em; cursor: pointer; }
+.su-tip-btn:hover { background: var(--hover); color: var(--text); }
+.su-tip-btn svg { width: 14px; height: 14px; }
+.su-tip { padding: 10px 12px; border-radius: var(--r-btn); background: var(--blue-bg); color: var(--text); font-size: 13px; line-height: 1.5; }
+.su-offer-body { display: flex; flex-direction: column; gap: var(--s2); }
+
+/* Import and proof dialogs */
+.su-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.su-fieldset legend { padding: 0; margin-bottom: var(--s2); }
+.su-fieldset .seg { align-self: flex-start; }
+.su-drop { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s3); padding: var(--s5); border: 1px dashed var(--edge); border-radius: 12px; background: var(--row-hover); }
+.su-file { display: flex; gap: var(--s3); align-items: flex-start; padding: 12px; border: 1px solid var(--line-strong); border-radius: 10px; }
+.su-file svg { flex: none; margin-top: 2px; color: var(--text-2); }
+
+/* Change who we contact: the title order, as rows in a bordered list */
+.su-titles { display: flex; flex-direction: column; margin: 0; padding: 0; border: 1px solid var(--line-strong); border-radius: 10px; overflow: hidden; }
+.su-titles:not(:has(li)) { display: none; }
+.su-title { display: flex; align-items: center; gap: var(--s3); min-height: 44px; padding: 4px 6px 4px 12px; }
+.su-title + .su-title { border-top: 1px solid var(--line); }
+.su-title-n { flex: none; width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--sunken); display: grid; place-items: center; font-size: 11px; font-weight: 600; letter-spacing: 0; color: var(--text-2); }
+.su-title-name { flex: 1 1 auto; min-width: 0; font-weight: 500; overflow-wrap: anywhere; }
+.su-title-acts { display: flex; gap: 2px; flex: none; }
+.su-title-acts .btn[aria-disabled="true"] { background: transparent; border-color: transparent; }
+
+/* ---------- 2 Five questions ---------- */
+.su-q-count { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: var(--text-2); }
+.su-q-bar { display: inline-flex; gap: 3px; }
+.su-q-bar span { width: 18px; height: 4px; border-radius: 2px; background: var(--line-strong); }
+.su-q-bar .is-done, .su-q-bar .is-now { background: var(--text); }
+.su-q-form { display: flex; flex-direction: column; gap: var(--s3); }
+.su-q-alt .link-btn { color: inherit; font-weight: 500; }
+
+/* ---------- 3 The leads list: a record table in a card, with its toolbar on top ---------- */
+.su-list-card { min-width: 0; }
+.su-toolbar { display: flex; align-items: center; gap: var(--s3); min-height: 48px; padding: 8px var(--s3) 8px 10px; border-bottom: 1px solid var(--line); }
+.su-toolbar .filters { flex-wrap: nowrap; }
+.su-toolbar-end { margin-left: auto; display: flex; align-items: center; gap: var(--s4); }
+.su-perco { display: flex; align-items: center; gap: var(--s2); }
+.su-head-acts { display: flex; align-items: center; gap: var(--s3); }
+
+.su-table { table-layout: fixed; min-width: 1080px; }
+.su-table.su-per-1 { min-width: 900px; }
+.su-table.su-per-3 { min-width: 1300px; }
+.su-col-co { width: 260px; }
+.su-col-n { width: 64px; }
+.su-col-p { width: 216px; }
+.su-table th, .su-table td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.su-table td { height: 40px; padding: 0 12px; }
+.su-table th:first-child, .su-table td:first-child { padding-left: var(--s4); }
+.su-table tbody tr:last-child td { border-bottom: 1px solid var(--line); }
+.su-co-row:hover td, .su-co-row:focus-within td { background: var(--row-hover); }
+/* The company column stays put when the table scrolls sideways */
+.su-table thead th:first-child, .su-table .su-co-row td:first-child { position: sticky; left: 0; z-index: 1; background: var(--surface); box-shadow: inset -1px 0 0 var(--line); }
+.su-co-row:hover td:first-child, .su-co-row:focus-within td:first-child { background: var(--row-hover); }
+.su-table th:nth-child(2), .su-table td:nth-child(2) { border-left: 0; }
+.su-co { display: flex; align-items: center; gap: 8px; min-width: 0; }
+/* The row's menu sits at the end of the company cell, over the location, when the row is hovered or focused */
+.su-co-menu { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); background: var(--row-hover); }
+.su-co-menu:hover { background: var(--selected); }
+.su-co .rec { flex: 0 1 auto; }
+.su-co-loc { flex: 0 10 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.su-pp { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.su-pp .masked { flex: none; }
+.su-pp .masked svg { width: 12px; height: 12px; }
+.su-pp-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Group rows: the top 10, then the rest */
+.su-table .su-group-row th { height: 32px; padding: 0 var(--s4); overflow: visible; background: var(--row-hover); border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--text); text-align: left; }
+.su-group-in { position: sticky; left: var(--s4); display: inline-flex; align-items: baseline; gap: var(--s2); }
+.su-group-in .t-2 { font-weight: 500; }
+.su-table-foot { display: flex; align-items: center; gap: var(--s3); min-height: 44px; padding: 6px var(--s3) 6px var(--s4); font-size: 13px; color: var(--text-2); }
+.su-table-foot .btn { margin-left: auto; }
+@media (max-width: 860px) {
+  .su-toolbar { flex-wrap: wrap; row-gap: var(--s2); }
+  .su-toolbar .filters { width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .su-toolbar .filters::-webkit-scrollbar { display: none; }
+  .su-toolbar-end { margin-left: 0; flex-wrap: wrap; gap: var(--s2) var(--s4); }
+}
+@media (max-width: 720px) {
+  /* Phones: each company stacks into a block, its menu at the top right */
+  .su-table, .su-table.su-per-1, .su-table.su-per-3 { min-width: 0; table-layout: auto; }
+  .su-table th, .su-table td { white-space: normal; overflow: visible; }
+  .su-table td { height: auto; }
+  .su-table td.col-num { text-align: left; }
+  .su-table tbody tr.su-co-row { position: relative; padding: 12px var(--s4); }
+  .su-table .su-co-row td:first-child { position: static; box-shadow: none; padding-right: 40px !important; padding-bottom: 4px !important; }
+  .su-co-menu { top: 8px; right: 8px; transform: none; background: transparent; }
+  .su-table tbody tr.su-group-row { padding: 0; border-bottom: 0; }
+  .su-table .su-group-row th { display: block; height: auto; padding: 8px var(--s4); }
+  .su-group-in { position: static; flex-wrap: wrap; }
+  .su-co .rec > span:last-child, .su-co-loc { white-space: normal; }
+  .su-pp { display: inline-flex; flex-wrap: wrap; vertical-align: middle; }
+  .su-table td.su-pp-empty { display: none; }
+  .su-table-foot { border-top: 0; }
+}
+
+/* ---------- 3 The result: the top five in a card, drawn like Home's rows ---------- */
+.su-top-row { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(220px, 270px); column-gap: var(--s3); align-items: start; padding: 11px var(--s4); }
+.su-top-row > .co-mark { margin-top: 1px; }
+.su-top-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.su-top-name { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.su-top-name > span:first-child { flex: none; font-weight: 500; }
+.su-top-why { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; min-width: 0; }
+.su-top-why .t-2 { font-size: 13px; }
+.su-top-ppl { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding-top: 1px; }
+@media (max-width: 760px) {
+  .su-top-row { grid-template-columns: auto minmax(0, 1fr); row-gap: 8px; }
+  .su-top-ppl { grid-column: 2; flex-direction: row; flex-wrap: wrap; gap: 4px var(--s4); padding-top: 0; }
+}
+
+/* ---------- 4 Where to send from: an integrations list ---------- */
+.su-accs { display: flex; flex-direction: column; margin: 0; padding: 0; }
+.su-acc { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; column-gap: var(--s3); align-items: start; padding: 14px var(--s4); }
+.su-acc + .su-acc { border-top: 1px solid var(--line); }
+.su-acc > .su-tile { margin-top: 5px; }
+.su-acc-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.su-acc-main:focus { outline: none; }
+.su-acc-main:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; border-radius: 4px; }
+.su-acc-line { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; font-family: var(--font-text); font-size: 14px; font-weight: 600; line-height: 1.5; letter-spacing: -0.01em; }
+.su-acc-act { display: flex; align-items: center; justify-content: flex-end; margin-top: 7px; }
+.su-booking { margin-top: var(--s3); max-width: 400px; }
+@media (max-width: 640px) {
+  .su-acc:not(.is-on) { row-gap: var(--s3); }
+  .su-acc:not(.is-on) .su-acc-act { grid-column: 2 / -1; justify-content: flex-start; margin-top: 0; }
+}
+
+/* Connect dialogs. The title takes focus when a dialog opens so screen readers start there; it is not a control, so no ring */
+.su-cx-head > .su-tile { width: 36px; height: 36px; border-radius: 9px; }
+.su-cx-title:focus { outline: none; }
+.su-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); }
+.su-opt { display: flex; align-items: center; gap: var(--s3); min-height: 52px; padding: 8px 12px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow-xs); cursor: pointer; }
+.su-opt:hover { border-color: var(--edge); }
+.su-opt:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.su-opt:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+.su-opt input:focus-visible { outline: none; }
+.su-opt-mark { display: grid; place-items: center; flex: none; color: var(--text); }
+.su-opt-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; line-height: 1.3; }
+.su-does-list { display: flex; flex-direction: column; gap: var(--s2); }
+.su-does-list li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 10px; font-size: 14px; line-height: 1.45; }
+.su-does-list svg { margin-top: 2px; color: var(--text-2); }
+.su-aside-note { display: flex; gap: var(--s2); align-items: flex-start; font-size: 13px; line-height: 1.45; color: var(--text-2); }
+.su-aside-note svg { flex: none; margin-top: 1px; }
+.su-risk { display: flex; gap: var(--s2); align-items: flex-start; font-size: 13px; line-height: 1.45; color: var(--text); }
+.su-risk svg { flex: none; margin-top: 1px; color: var(--amber-text); }
+.su-ack { font-size: 14px; line-height: 1.45; }
+.su-ack input[aria-invalid="true"] { outline: 2px solid var(--error); outline-offset: 2px; }
+.su-steps { display: flex; flex-direction: column; gap: var(--s3); }
+.su-steps li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: var(--s3); align-items: start; font-size: 14px; line-height: 1.45; }
+.su-steps li > span:not(.su-step-n), .su-steps li > .stack { padding-top: 1px; }
+.su-step-n { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--sunken); display: grid; place-items: center; font-size: 11px; font-weight: 600; letter-spacing: 0; color: var(--text-2); }
+.su-steps li.is-done .su-step-n { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+.su-steps .btn { align-self: flex-start; }
+/* Email checks after connecting: a bordered list, one check per row */
+.su-checklist { display: flex; flex-direction: column; margin: 0; padding: 0; border: 1px solid var(--line-strong); border-radius: 10px; overflow: hidden; }
+.su-checklist li { display: grid; grid-template-columns: 80px minmax(0, 1fr) auto; gap: var(--s3); align-items: center; min-height: 40px; padding: 6px 10px 6px 12px; font-size: 13px; line-height: 1.4; }
+.su-checklist li + li { border-top: 1px solid var(--line); }
+.su-check-k { font-weight: 600; color: var(--text); }
+@media (max-width: 480px) {
+  .su-opts { grid-template-columns: minmax(0, 1fr); }
+  .su-checklist li { grid-template-columns: minmax(0, 1fr) auto; }
+  .su-check-v { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* ---------- 4 The plan: one line per step on a small track, and one example message beside it ---------- */
+.su-plan { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: var(--s4); align-items: start; }
+@media (max-width: 960px) { .su-plan { grid-template-columns: minmax(0, 1fr); } }
+.su-psteps { display: flex; flex-direction: column; margin: 0; padding: var(--s4) var(--s4) var(--s2); }
+.su-pstep { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: var(--s3); padding-bottom: var(--s4); }
+.su-pstep:last-child { padding-bottom: var(--s2); }
+.su-pstep::before { content: ""; position: absolute; left: 13.5px; top: 32px; bottom: 4px; width: 1px; background: var(--line-strong); }
+.su-pstep:last-child::before { display: none; }
+.su-pstep:focus { outline: none; }
+.su-pstep:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.su-pstep-node { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--surface); border: 1px solid var(--line-strong); color: var(--text); box-shadow: var(--shadow-xs); --mark-cut: var(--surface); }
+.su-pstep.is-skip .su-pstep-node { border-style: dashed; color: var(--muted); box-shadow: none; }
+.su-pstep-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; padding-top: 3px; }
+.su-pstep-line { display: flex; align-items: baseline; gap: var(--s3); font-size: 14px; line-height: 1.45; }
+.su-pstep-title { font-weight: 500; color: var(--text); }
+.su-pstep.is-skip .su-pstep-title { color: var(--text-2); }
+.su-pstep-when { margin-left: auto; font-size: 13px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.su-pstep-does { font-size: 13px; line-height: 1.45; color: var(--text-2); }
+.su-pstep-does .link-btn { color: var(--text); font-size: 13px; }
+/* The example message, drawn like Attio's composer card */
+.su-ex-fields { margin: 0; padding: 0; }
+.su-ex-field { display: grid; grid-template-columns: 56px minmax(0, 1fr); column-gap: var(--s3); align-items: center; min-height: 40px; padding: 6px var(--s4); border-bottom: 1px solid var(--line); }
+.su-ex-field dt { font-size: 13px; color: var(--text-2); }
+.su-ex-field dd { margin: 0; min-width: 0; font-size: 14px; }
+.su-ex-body { margin: 0; padding: var(--s4); font-size: 14px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* ---------- 4 The builder, opened from "Change the plan" (the builder is the flow area's) ---------- */
+.su-flow { min-width: 0; }
+
+/* ---------- 5 Launch ---------- */
+.su-launch .su-attrs { --su-k: 168px; }
+.su-sum .su-attr-v { gap: 2px; }
+.su-sum .su-attr-v > .strip { margin: 2px 0 4px; }
+.su-from { display: flex; flex-wrap: wrap; gap: 2px 14px; }
+.su-from-item { display: inline-flex; align-items: center; gap: 6px; }
+.su-from-item .ch { color: var(--text); }
+.su-sum-sw .su-attr-k label { cursor: pointer; }
+.su-sum-sw .su-attr-act { min-height: 21px; }
+.su-price-card .seg { display: flex; width: 100%; }
+.su-price-card .seg button { flex: 1 1 0; }
+/* The answer above a card's detail: "Today Onbook contacts 5 people" */
+.su-lead { gap: 2px; }
+.su-lead-n { font-size: 15px; font-weight: 600; line-height: 1.4; letter-spacing: -0.01em; color: var(--text); }
+.su-price { display: flex; align-items: baseline; gap: 6px; font-size: 28px; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
+.su-price-per { font-size: 14px; font-weight: 500; letter-spacing: -0.01em; color: var(--text-2); }
+.su-incl { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; font-size: 14px; line-height: 1.45; }
+.su-incl li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; }
+.su-incl svg { margin-top: 3px; color: var(--text-2); }
+.su-due-box { display: flex; flex-direction: column; gap: 4px; background: var(--row-hover); }
+.su-due { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); margin: 0; font-size: 14px; font-weight: 600; color: var(--text); }
+.su-due dd { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+
+/* Timelines: launch and Day one */
+.su-tl { display: flex; flex-direction: column; margin: 0; padding: 0; }
+.su-tl li { position: relative; display: grid; grid-template-columns: 104px 14px minmax(0, 1fr); column-gap: var(--s3); padding-bottom: var(--s3); }
+.su-tl li:last-child { padding-bottom: 0; }
+.su-tl li::before { content: ""; position: absolute; left: calc(104px + var(--s3) + 6.5px); top: 19px; bottom: 0; width: 1px; background: var(--line-strong); }
+.su-tl li:last-child::before { display: none; }
+.su-tl-when { font-size: 13px; font-weight: 500; line-height: 1.6; font-variant-numeric: tabular-nums; color: var(--text-2); }
+.su-tl-dot { position: relative; z-index: 1; width: 14px; height: 14px; margin-top: 4px; border-radius: 50%; border: 1px solid var(--edge); background: var(--surface); display: grid; place-items: center; }
+.su-tl li.is-first .su-tl-dot { border: 1.5px solid var(--text); }
+.su-tl-what { font-size: 14px; line-height: 1.5; }
+@media (max-width: 640px) {
+  .su-tl li { grid-template-columns: 88px 14px minmax(0, 1fr); column-gap: var(--s2); }
+  .su-tl li::before { left: calc(88px + var(--s2) + 6.5px); }
+}
+
+/* ---------- Day one: widget cards, as on Home ---------- */
+.su-day { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); gap: var(--s4); align-items: start; }
+@media (max-width: 1180px) { .su-day { grid-template-columns: minmax(0, 1fr); } }
+.su-starters li { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px var(--s4); }
+.su-starter-who { flex: 1 1 auto; min-width: 0; display: flex; align-items: baseline; gap: var(--s2); }
+.su-starter-name { flex: none; white-space: nowrap; }
+.su-starter-when { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.su-link-row { display: flex; align-items: center; gap: var(--s3); padding: 10px var(--s4); color: var(--text); text-decoration: none; }
+.su-link-row:hover { background: var(--row-hover); }
+.su-link-row > svg { flex: none; color: var(--muted); }
+.su-link-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1px; line-height: 1.45; }
+@media (max-width: 640px) {
+  /* The tab bar already says Campaigns, so the crumbs give the title its room */
+  .main-inner:has(> .su-day) .page-head .crumbs { display: none; }
+  .su-starter-who { flex-direction: column; gap: 0; }
+  .su-starter-who .truncate { white-space: normal; }
+}
+
+/* Step 2: the optional parts of the profile, behind one disclosure */
+.su-more-btn { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; width: 100%; padding: 10px var(--s4); border: 1px dashed var(--line-strong); border-radius: var(--r-card); background: transparent; color: var(--text); font: 500 14px/1.4 var(--font-text); text-align: left; cursor: pointer; }
+.su-more-btn:hover { background: var(--hover); }
+.su-more-btn .t-2 { font-size: 13px; }
+#su-more-cards[hidden] { display: none; }
+
+/* Step 3: the example companies, each with Change and Remove, then a field to add one */
+.su-pick { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: var(--s3); align-items: start; padding: 11px var(--s4); }
+.su-pick > .co-mark { margin-top: 1px; }
+.su-pick-acts { display: flex; gap: 2px; margin: -3px -6px 0 0; }
+.su-pick-acts .btn-icon { color: var(--text-2); }
+.su-pick-acts .btn-icon:hover { color: var(--text); }
+.su-pick-editing { display: block; }
+.su-pick-form, .su-pick-add { display: flex; flex-wrap: nowrap; max-width: none; gap: var(--s2); align-items: center; }
+.su-pick-form .input, .su-pick-add .input { flex: 1 1 auto; min-width: 0; }
+.su-pick-add { padding: 12px var(--s4); border-top: 1px solid var(--line); }
+
+/* Step 3, never contact: one checkbox row per company found on the site */
+.su-nv { display: flex; align-items: flex-start; gap: var(--s3); padding: 11px var(--s4); }
+.su-nv > input { margin-top: 6px; }
+.su-nv-label { flex: 1; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: var(--s3); align-items: start; cursor: pointer; }
+.su-nv-all { display: flex; justify-content: flex-end; padding: 8px var(--s4); border-bottom: 1px solid var(--line); }
+.su-card-foot > svg { vertical-align: -2px; margin-right: 4px; }

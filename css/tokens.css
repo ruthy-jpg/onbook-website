@@ -1,0 +1,119 @@
+/* Onbook design v4 tokens: Attio's system. Light only.
+   A white page on a cool grey window, near-black text, cool slate greys, hairline borders, small precise
+   radii, Inter at weight 500. One near-black main button. Cobalt blue marks what is selected, focused or
+   needs the user; soft coloured tags carry status. Onbook's mint is only the logo mark. */
+
+:root {
+  /* Window and surfaces */
+  --window: #F5F6F7;         /* the app window behind the sidebar and the page panel */
+  --paper: #FFFFFF;          /* the page itself */
+  --surface: #FFFFFF;        /* cards, fields, menus, drawers, dialogs */
+  --sunken: #F4F5F6;         /* tracks, skeletons, grey tags, quiet fills */
+  --hover: #F4F5F6;          /* hover on buttons and menu items */
+  --row-hover: #FAFAFB;      /* hover on table and list rows */
+  --selected: #EAEBED;       /* the current nav item, the chosen filter */
+  --line: #EEEFF1;           /* grid lines and dividers */
+  --line-strong: #E4E7EC;    /* card, panel and field edges */
+  --edge: #CAD0D9;           /* field edges on hover */
+
+  /* Text */
+  --text: #1C1D1F;           /* 16.9:1 on white */
+  --text-2: #636A76;         /* metadata and secondary text: 5.5:1 on white */
+  --muted: #9FA1A7;          /* placeholders and disabled only */
+
+  /* The main action */
+  --ink: #1E2023;
+  --ink-hover: #33363B;
+  --ink-edge: #3D4148;
+  --on-ink: #FFFFFF;
+
+  /* Cobalt: selected, focused, needs you, links */
+  --accent: #266DF0;         /* focus rings, switches, checkboxes, selection edges */
+  --accent-text: #1F5FD6;    /* blue words: 5.7:1 on white */
+  --accent-soft: #E4EDFF;
+  --accent-line: #C9DAFB;
+  --on-accent: #FFFFFF;
+  --needs-you: #266DF0;
+  --focus: #266DF0;
+
+  /* Status tags: soft fill, hairline edge, strong words */
+  --green-bg: #E0FCED;  --green-line: #CBF7E1;  --green-text: #007D53;
+  --blue-bg: #E4EDFF;   --blue-line: #C9DAFB;   --blue-text: #1F5FD6;
+  --amber-bg: #FFF5E3;  --amber-line: #FCE6BF;  --amber-text: #9A5300;
+  --red-bg: #FFEEEC;    --red-line: #FDD9D4;    --red-text: #B42F1A;
+  --grey-bg: #F4F5F6;   --grey-line: #E4E7EC;   --grey-text: #50565F;
+  --warning: #9A5300;
+  --error: #B42F1A;
+  --on-error: #FFFFFF;
+  --success: #007D53;
+  --dot-amber: #E69A1F;      /* paused and attention dots, meters near the limit */
+  --dot-red: #E5484D;        /* error dots */
+  --nav-hover: rgba(28, 40, 64, 0.05);
+  --glass: rgba(255, 255, 255, 0.92); /* sticky bars that blur what scrolls under them */
+
+  /* The Onbook mark (brand book T2): a near-black tile of nine days, the last one booked in mint */
+  --brand-ink: #1E2023;
+  --brand-day: #FFFFFF;
+  --brand-mint: #62DAAA;
+  --brand: #62DAAA;
+  --on-brand: #12301F;
+
+  /* Avatar and company tiles: soft fills with strong letters */
+  --av-1-bg: #DCE8FF; --av-1-text: #2556C4;
+  --av-2-bg: #D6F5E5; --av-2-text: #136B45;
+  --av-3-bg: #FFE6CF; --av-3-text: #9C4A06;
+  --av-4-bg: #E9E1FF; --av-4-text: #5E3BB8;
+  --av-5-bg: #FFDDEA; --av-5-text: #A52C5E;
+  --av-6-bg: #D3F1F2; --av-6-text: #0F6566;
+  --av-7-bg: #FFF0C2; --av-7-text: #7A5C00;
+  --av-8-bg: #E9EBEE; --av-8-text: #4A5059;
+
+  /* Depth: blue-tinted and very light, as Attio does */
+  --scrim: rgba(16, 24, 40, 0.28);
+  --ring: 0 0 0 1px rgba(28, 40, 64, 0.10);
+  --shadow-xs: 0 1px 2px rgba(28, 40, 64, 0.06);
+  --shadow-btn: 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 2px rgba(28, 40, 64, 0.18);
+  --shadow-card: 0 1px 2px rgba(28, 40, 64, 0.04);
+  --shadow-lift: 0 0 0 1px rgba(28, 40, 64, 0.08), 0 4px 16px rgba(28, 40, 64, 0.10);
+  --shadow-overlay: 0 0 0 1px rgba(28, 40, 64, 0.08), 0 16px 48px rgba(28, 40, 64, 0.18);
+  --knob: #FFFFFF;
+  --knob-shadow: 0 1px 2px rgba(28, 40, 64, 0.25);
+
+  /* Type: Inter everywhere; its display cut takes over at large sizes */
+  --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-text: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Inter", ui-sans-serif, system-ui, sans-serif; /* kept for old references; there is no serif in v4 */
+  --fs-display: clamp(40px, 5.2vw, 64px);
+  --fs-hero-sub: clamp(16px, 1.4vw, 18px);
+  --fs-title: 24px;          /* a big title inside a page, such as Home's greeting or a record's name */
+  --fs-bar: 15px;            /* the title in the page bar */
+  --fs-heading: 15px;        /* section and card headings */
+  --fs-sub: 15px;
+  --fs-body: 14px;
+  --fs-small: 13px;
+  --fs-micro: 12px;
+
+  /* Space: 4px base */
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px;
+  --s8: 32px; --s10: 40px; --s12: 48px; --s16: 64px;
+  --gutter: 32px;            /* page side padding inside the panel */
+
+  /* Shape and size */
+  --r-pill: 999px;
+  --r-btn: 8px;
+  --r-field: 8px;
+  --r-card: 12px;
+  --r-tag: 6px;
+  --r-control: 4px;
+  --control-m: 32px;
+  --control-s: 28px;
+  --rail: 240px;
+  --page-max: 1200px;
+  --read-max: 680px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+
+  color-scheme: light;
+}
+
+/* Touch screens get bigger targets */
+@media (pointer: coarse) { :root { --control-m: 44px; --control-s: 40px; } }

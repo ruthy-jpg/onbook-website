@@ -1,0 +1,52 @@
+/* Home (v4): Attio's home. A greeting, then widget cards with a header row and tight rows inside */
+.home-hello { display: flex; flex-direction: column; gap: 4px; padding-top: var(--s2); }
+.home-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); gap: var(--s4); align-items: start; }
+@media (max-width: 1180px) { .home-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Needs you */
+.ny-list > li + li { border-top: 1px solid var(--line); }
+.ny-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--s3); align-items: start; padding: 11px var(--s4); text-decoration: none; color: var(--text); }
+.ny-row:hover { background: var(--row-hover); }
+.ny-row > .avatar, .ny-row > .ny-mark { margin-top: 1px; }
+.ny-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ny-who { display: flex; gap: 8px; align-items: baseline; min-width: 0; }
+.ny-who > span:first-child { white-space: nowrap; }
+.ny-text { color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ny-meta { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-2); white-space: nowrap; padding-top: 1px; }
+.ny-mark { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; background: var(--blue-bg); color: var(--blue-text); }
+
+/* Campaigns */
+.home-today { display: flex; align-items: center; gap: var(--s4); padding: 10px var(--s4); border-bottom: 1px solid var(--line); font-size: 13.5px; flex-wrap: wrap; }
+.home-today .meter { width: 160px; flex: none; }
+.home-table td, .home-table th { white-space: nowrap; }
+.home-table th:first-child, .home-table td:first-child { padding-left: var(--s4); }
+.home-table th:last-child, .home-table td:last-child { padding-right: var(--s4); }
+.home-table tbody tr:last-child td { border-bottom: 0; }
+.home-table td:first-child { width: 100%; max-width: 0; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 720px) { .home-table .hide-md { display: none; } }
+
+/* This week */
+.cal-body { display: flex; flex-direction: column; gap: var(--s3); padding: var(--s4); }
+.call-list { display: flex; flex-direction: column; }
+.call-list > li + li { border-top: 1px solid var(--line); }
+.call-row { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: var(--s3); padding: 8px var(--s2); margin: 0 calc(-1 * var(--s2)); border-radius: 8px; text-decoration: none; color: var(--text); align-items: start; font-size: 13.5px; }
+.call-row:hover { background: var(--row-hover); }
+.call-time { display: flex; flex-direction: column; line-height: 1.4; }
+.call-time > span { color: var(--text-2); }
+.call-who { display: flex; flex-direction: column; min-width: 0; line-height: 1.4; }
+
+/* Accounts */
+.acc-list > li + li { border-top: 1px solid var(--line); }
+.acc-row { display: flex; gap: 10px; align-items: center; padding: 10px var(--s4); font-size: 13.5px; }
+
+/* Usage */
+.usage-num { display: flex; align-items: baseline; gap: 6px; }
+.usage-num > span:first-child { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; }
+
+/* Before subscribing */
+.launch-steps { display: flex; flex-direction: column; gap: var(--s4); counter-reset: ls; }
+.launch-steps li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: var(--s3); counter-increment: ls; font-size: 14px; }
+.launch-steps li::before { content: counter(ls); width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--line-strong); display: grid; place-items: center; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0; color: var(--text-2); background: var(--sunken); }
+
+/* Phones: the time drops under the words, the meter takes the full width */
+@media (max-width: 640px) { .ny-row { grid-template-columns: auto minmax(0, 1fr); } .ny-meta { grid-column: 2; padding-top: 0; } .home-today .meter { width: 100%; } }

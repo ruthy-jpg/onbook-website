@@ -1,0 +1,337 @@
+/* Inbox (v4, Attio): three panes inside the white panel: the conversations, the open conversation and the
+   company. One top bar runs across all three (52px, a hairline under it), with one row under it in each pane:
+   the view filters, who the person is, the company's domain. Each pane scrolls on its own; one pane at a time
+   on phones. Messages and the composer are Attio's cards; the company is Attio's record details. Light only. */
+
+/* The Inbox fills the panel exactly (8px inside the window), so only the panes scroll. The window contains the
+   panel's margin (otherwise it collapses through and the page scrolls by 8px). */
+.app:has(.ib-app) { display: flow-root; }
+.main:has(.ib-app) { height: calc(100dvh - 16px); min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.main:has(.ib-app) > .main-inner { flex: 1 1 auto; min-height: 0; padding: 0; gap: 0; }
+.main:has(.ib-app) > .main-inner > .banner-stack { flex: none; margin: 0; }
+
+.ib-app {
+  --ib-list: clamp(300px, 22.5vw, 340px);
+  --ib-panel: clamp(300px, 22vw, 340px);
+  --ib-bar: 52px;      /* the top bar, as on every page */
+  --ib-tools: 41px;    /* the row under it */
+  --mark-cut: var(--paper);
+  position: relative; flex: 1 1 auto; min-height: 0;
+  display: grid; grid-template-columns: var(--ib-list) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr);
+}
+.ib-app.has-panel { grid-template-columns: var(--ib-list) minmax(0, 1fr) var(--ib-panel); }
+.ib-app [tabindex="-1"]:focus { outline: none; }
+/* Scroll areas hold their own absolutely placed children (screen reader text), so the page never scrolls */
+.ib-list, .ib-rows, .ib-thread, .ib-msgs, .ib-panel, .ib-panel-body, .ib-blank { position: relative; }
+.ib-sep { margin: 0 6px; color: var(--muted); }
+
+/* ---------- Conversations ---------- */
+.ib-list { display: flex; flex-direction: column; min-width: 0; min-height: 0; border-right: 1px solid var(--line); }
+/* The page's own top bar (Inbox and the search), fitted to the pane */
+.ib-list > .page-head { flex: none; margin: 0; }
+.ib-list .page-bar { min-height: var(--ib-bar); padding: 8px 12px 8px 16px; flex-wrap: nowrap; gap: var(--s3); }
+.ib-list .page-titles { flex: none; }
+.ib-list .page-actions { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; justify-content: flex-end; }
+.ib-search { flex: 1 1 auto; min-width: 0; max-width: 200px; }
+/* View filters, on the row under the bar */
+.ib-tools { flex: none; display: flex; align-items: center; min-height: var(--ib-tools); padding: 0 7px; border-bottom: 1px solid var(--line); }
+.ib-filters { flex-wrap: nowrap; min-width: 0; }
+.ib-fmore svg { flex: none; margin-right: -3px; color: var(--text-2); }
+.ib-fmore.is-on { background: var(--selected); color: var(--text); }
+
+.ib-rows { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 6px 6px 16px; }
+.ib-rows > .empty { padding: var(--s5) 10px; }
+.ib-empty-h { font-size: 15px; }
+.ib-ul { display: flex; flex-direction: column; gap: 1px; }
+/* A row: avatar, name, company and time, then one grey line. The open row sits on grey, like the sidebar. */
+.ib-row { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; align-items: start; padding: 10px; border-radius: 8px; color: var(--text); text-decoration: none; }
+.ib-row:hover { background: var(--hover); --mark-cut: var(--hover); }
+.ib-row[aria-current="true"] { background: var(--selected); --mark-cut: var(--selected); }
+.ib-row:focus-visible { outline-offset: -2px; }
+.ib-row > .avatar, .ib-row > .ib-mark { margin-top: 1px; }
+.ib-mark { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; background: var(--blue-bg); color: var(--blue-text); }
+.ib-row-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.ib-row-top { display: flex; align-items: center; gap: 6px; min-width: 0; line-height: 20px; }
+.ib-row-name { flex: 0 1 auto; min-width: 0; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-row.is-unread .ib-row-name { font-weight: 600; }
+.ib-row-co { flex: 1 1 0; min-width: 0; font-size: 13px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-row-when { flex: none; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ib-row-line { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.ib-row-ch { flex: none; display: inline-grid; place-items: center; width: 14px; color: var(--text-2); }
+.ib-row-text { flex: 1 1 auto; min-width: 0; font-size: 13px; line-height: 19px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-row-text .ib-sep { margin: 0 5px; }
+.ib-row-dot { width: 7px; height: 7px; margin: 0 1px 0 4px; }
+.ib-lead { color: var(--text); }
+.ib-none { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; padding: var(--s4) 10px; }
+.ib-none .btn { margin-top: var(--s2); }
+.ib-keys { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 9px; padding: 9px 12px 10px 16px; border-top: 1px solid var(--line); font-size: var(--fs-micro); color: var(--text-2); }
+.ib-key { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+
+/* ---------- The conversation ---------- */
+/* One reading column: the bar, the line under it, the cards and the composer share a left edge */
+.ib-thread { display: flex; flex-direction: column; min-width: 0; min-height: 0; container: ib-thread / inline-size; --ib-col: 760px; --ib-gut: max(var(--s6), calc((100% - var(--ib-col)) / 2)); }
+.ib-top { flex: none; }
+.ib-head { display: flex; align-items: center; gap: var(--s3); min-height: var(--ib-bar); padding: 8px var(--ib-gut); border-bottom: 1px solid var(--line); }
+.ib-back { display: none; }
+.ib-name-row { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; }
+.ib-title { min-width: 0; font-size: var(--fs-bar); line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-name-row .tag, .ib-name-row > .avatar, .ib-name-row > .ib-mark { flex: none; }
+.ib-acts { flex: none; display: flex; align-items: center; gap: 4px; margin-right: -6px; }
+.ib-co-drawer { display: none; }
+/* Who they are and how they answered; a booked call stays in view on the right */
+.ib-sub { display: flex; align-items: center; gap: var(--s3); min-height: var(--ib-tools); padding: 0 var(--ib-gut); border-bottom: 1px solid var(--line); font-size: 13px; color: var(--text-2); }
+.ib-sub-main { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-sub a { color: var(--text); text-decoration: none; }
+.ib-sub a:hover { text-decoration: underline; text-decoration-color: var(--edge); }
+.ib-sub-call { flex: none; display: inline-flex; align-items: center; gap: 6px; color: var(--text); white-space: nowrap; }
+.ib-sub-call svg { flex: none; color: var(--text-2); }
+
+/* Messages: Attio's cards in one column */
+.ib-msgs { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--s5) var(--ib-gut) var(--s5); }
+.ib-msgs:focus-visible { outline-offset: -2px; }
+.ib-log { display: flex; flex-direction: column; gap: var(--s3); }
+.ib-subj { font-weight: 600; color: var(--text); }
+.ib-subj + p { margin-top: 4px; }
+.ib-mail-body p + p, .ib-out-body p + p { margin-top: 0.6em; }
+
+/* Onbook's earlier steps: one card, one compact line each, the step they answered open */
+.ib-steps .card-head .count { margin-left: -2px; }
+.ib-steps .card-head a { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ib-outs > li + li { border-top: 1px solid var(--line); }
+.ib-out-head { display: grid; grid-template-columns: 16px max-content minmax(0, 1fr) max-content; align-items: center; column-gap: 10px; width: 100%; min-height: 40px; padding: 0 var(--s4); border: 0; background: none; color: var(--text-2); font: 500 13.5px/1.4 var(--font-text); letter-spacing: -0.01em; text-align: left; cursor: pointer; }
+.ib-out-head:hover { background: var(--row-hover); --mark-cut: var(--row-hover); }
+.ib-out-head:focus-visible { outline-offset: -2px; }
+.ib-out-ch { display: inline-grid; place-items: center; color: var(--text-2); }
+.ib-out-step { color: var(--text); white-space: nowrap; }
+.ib-out-snip { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-out-time { font-size: var(--fs-micro); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ib-out.is-open .ib-out-snip { visibility: hidden; }
+.ib-out-body { display: none; padding: 0 var(--s4) 14px 42px; color: var(--text-2); font-size: 14px; line-height: 1.55; overflow-wrap: anywhere; }
+.ib-out.is-open .ib-out-body { display: block; }
+
+/* A reply, theirs or yours: who, how and when, then the words. Theirs read a little larger. */
+.ib-mail { padding: 14px var(--s4) var(--s4); }
+.ib-mail-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ib-mail-who { flex: 1 1 auto; min-width: 0; font-size: 13px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-mail-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.ib-mail-time { flex: none; font-size: var(--fs-micro); color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ib-mail-body { margin-top: 10px; font-size: 14px; line-height: 1.6; color: var(--text); overflow-wrap: anywhere; }
+.ib-msg.is-in .ib-mail-body { font-size: 15px; line-height: 1.55; }
+.ib-msg.is-auto .ib-mail-body { color: var(--text-2); }
+
+/* Quiet grey lines: a booking, and the stop that a reply or booking causes */
+.ib-sys { display: flex; align-items: flex-start; gap: 8px; padding: 2px 17px; font-size: 13px; line-height: 20px; color: var(--text-2); }
+.ib-sys-icon { flex: none; display: grid; place-items: center; width: 24px; height: 20px; }
+.ib-sys-strong { color: var(--text); }
+.ib-sys time { white-space: nowrap; }
+
+/* Below the conversation: Attio's composer card, or a card in its place saying what happens instead */
+.ib-foot { flex: none; display: flex; flex-direction: column; gap: var(--s2); padding: 0 var(--ib-gut) var(--s4); }
+.ib-composer { background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-card); box-shadow: var(--shadow-card); transition: border-color .12s var(--ease), box-shadow .12s var(--ease); }
+.ib-composer:hover { border-color: var(--edge); }
+.ib-composer:has(.ib-textarea:focus) { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent); }
+.ib-composer:has(.ib-textarea[aria-invalid="true"]) { border-color: var(--error); box-shadow: 0 0 0 3px color-mix(in srgb, var(--error) 12%, transparent); }
+.ib-compose-head { display: flex; flex-wrap: wrap; align-items: center; gap: 2px var(--s3); padding: 10px 14px 0; }
+.ib-compose-label { flex: 1 1 auto; font-size: 13px; font-weight: 600; color: var(--text); }
+.ib-from { display: inline-flex; align-items: center; gap: 6px; min-width: 0; font-size: 12.5px; color: var(--text-2); }
+.ib-from svg { flex: none; }
+.ib-textarea { display: block; width: 100%; min-height: 72px; max-height: min(320px, 34dvh); margin: 0; padding: 8px 14px; border: 0; border-radius: 0; background: transparent; color: var(--text); font: 500 14px/1.55 var(--font-text); letter-spacing: -0.01em; resize: none; }
+.ib-textarea:focus { outline: none; }
+.ib-textarea::placeholder { color: var(--muted); opacity: 1; }
+.ib-reply-err { padding: 0 14px 4px; }
+.ib-compose-foot { display: flex; align-items: center; gap: var(--s2); padding: 2px 8px 8px; }
+.ib-send-hint { display: inline-flex; align-items: center; gap: 3px; margin-left: auto; }
+/* Onbook's suggested reply: the top of the reply box, on a quiet grey, until you use it or dismiss it.
+   A three-line preview (two on phones); Show all opens the whole draft. */
+.ib-sug { display: flex; flex-direction: column; gap: 4px; padding: 10px 14px 8px; background: var(--sunken); border-bottom: 1px solid var(--line); border-radius: 11px 11px 0 0; }
+.ib-sug-head { display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; min-width: 0; font-size: 13px; line-height: 20px; }
+.ib-sug-mark { flex: none; display: inline-grid; place-items: center; color: var(--text-2); }
+.ib-sug-title { flex: none; margin-right: 4px; font-weight: 600; color: var(--text); }
+/* The note keeps one line beside the title, or drops under it whole; it is never cut short */
+.ib-sug-note { flex: 0 1 auto; min-width: 0; color: var(--text-2); }
+.ib-sug-body { font-size: 14px; line-height: 1.55; color: var(--text); overflow-wrap: anywhere; }
+.ib-sug:not(.is-open) .ib-sug-body { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.ib-sug.is-open .ib-sug-body { max-height: 220px; overflow-y: auto; overscroll-behavior: contain; }
+.ib-sug-body p + p { margin-top: 0.6em; }
+.ib-sug-foot { display: flex; align-items: center; gap: 4px; padding-top: 4px; }
+.ib-sug-foot > .btn-secondary { margin-right: 2px; }
+.ib-sug-more { margin-left: auto; font-size: 13px; color: var(--text-2); text-decoration-color: var(--edge); min-height: 28px; }
+.ib-sug-more:hover { color: var(--text); }
+.ib-composer:has(.ib-sug) .ib-compose-head { padding-top: 8px; }
+/* While the suggestion shows, the empty box below it stays short; it grows as soon as you type */
+.ib-composer:has(.ib-sug) .ib-textarea:placeholder-shown { height: 52px !important; min-height: 0; }
+
+/* Why the reply can't send yet: the icon, then one run of words ending in the fix */
+.ib-blocked { display: grid; grid-template-columns: 15px minmax(0, 1fr); column-gap: 8px; align-items: start; font-size: var(--fs-small); line-height: 20px; color: var(--warning); }
+.ib-blocked svg { margin-top: 2px; }
+.ib-blocked .link-btn { font-size: var(--fs-small); color: var(--warning); text-decoration-color: currentColor; }
+.ib-state { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: start; gap: 2px 10px; padding: 12px var(--s4) 14px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-card); box-shadow: var(--shadow-card); }
+.ib-state-icon { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: var(--sunken); color: var(--text-2); }
+.ib-state-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding-top: 2px; }
+.ib-state-title { font-weight: 600; }
+.ib-state-acts { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); padding-top: var(--s2); }
+
+/* A booking to match: an Attio record card with the call's details and a suggested person */
+.ib-match-sec { display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3) var(--s4); }
+.ib-match-sec + .ib-match-sec { border-top: 1px solid var(--line); }
+.ib-match-sec .ib-attrs { margin: -6px 0 -2px; }
+.ib-nomatch { font-size: 13px; color: var(--text-2); }
+.ib-suggest-who { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 2px 0; }
+.ib-why { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--text-2); }
+.ib-why li { display: flex; gap: 8px; align-items: flex-start; }
+.ib-why svg { flex: none; margin-top: 2px; }
+.ib-match-foot { gap: var(--s3); padding-bottom: var(--s4); }
+.ib-match-actions { display: flex; flex-wrap: wrap; gap: var(--s2); }
+
+/* Nothing open, and day one: the bar keeps running, the words sit in the middle */
+.ib-head-blank { flex: none; }
+.ib-blank { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; justify-content: center; padding: var(--s8) var(--s6); }
+.ib-blank > .empty { margin: 0 auto; align-items: center; text-align: center; }
+.ib-d1 { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--s4); align-items: flex-start; }
+.ib-d1 > .card { width: 100%; }
+.ib-d1-list > li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; padding: 12px var(--s4); font-size: 14px; line-height: 1.5; }
+.ib-d1-list > li + li { border-top: 1px solid var(--line); }
+.ib-d1-icon { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: var(--sunken); color: var(--text-2); }
+
+/* ---------- Company panel: Attio's record details ---------- */
+.ib-panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; border-left: 1px solid var(--line); }
+.ib-panel-head { flex: none; display: flex; align-items: center; gap: 8px; min-height: var(--ib-bar); padding: 8px 10px 8px var(--s4); border-bottom: 1px solid var(--line); }
+.ib-panel-title { flex: 1 1 auto; min-width: 0; font-size: 14px; line-height: 1.3; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-panel-title a { text-decoration: none; }
+.ib-panel-title a:hover { text-decoration: underline; text-decoration-color: var(--edge); }
+.ib-panel-sub { flex: none; height: var(--ib-tools); padding: 0 var(--s4); border-bottom: 1px solid var(--line); font-size: 13px; line-height: 40px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-panel-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--s4) var(--s6); }
+.ib-sec { display: flex; flex-direction: column; gap: 4px; padding: 10px 0 12px; }
+.ib-sec + .ib-sec { border-top: 1px solid var(--line); }
+.ib-sec-h { display: flex; align-items: center; gap: 6px; min-height: 28px; font-size: 13px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); }
+/* Attribute rows: a grey label column, the value beside it, about 32px each */
+.ib-attrs { --ib-label: 92px; display: grid; grid-template-columns: var(--ib-label) minmax(0, 1fr); column-gap: var(--s3); margin: 0; font-size: 13px; line-height: 20px; }
+.ib-attrs dt { padding: 6px 0; color: var(--text-2); }
+.ib-attrs dd { margin: 0; padding: 6px 0; min-width: 0; color: var(--text); overflow-wrap: anywhere; }
+.ib-attrs dd .tag { margin-left: 4px; }
+.ib-attr-sub { display: block; color: var(--text-2); }
+.ib-attr-link { color: var(--text); text-decoration: none; }
+.ib-attr-link:hover { text-decoration: underline; text-decoration-color: var(--edge); }
+/* People at the company: record chips with their stage */
+.ib-people { display: flex; flex-direction: column; }
+.ib-person { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 3px 0; }
+.ib-person-link { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; border-radius: 6px; }
+.ib-person-link:hover .ib-person-name { text-decoration: underline; text-decoration-color: var(--edge); text-underline-offset: 3px; }
+.ib-person-main { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.ib-person-name { font-size: 13.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-person-title { font-size: 12.5px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-person .tag { flex: none; }
+.ib-flow { display: flex; flex-direction: column; gap: var(--s2); padding: 2px 0 2px; }
+/* The same details in a drawer on narrower windows */
+.ib-drawer { gap: 0; padding-top: var(--s2); }
+.ib-drawer > .ib-sec:first-child { padding-top: 0; }
+.ib-drawer .ib-attrs { --ib-label: 120px; }
+.ib-drawer-title { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+
+/* Dialogs: date choices and the person picker */
+.ib-when-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4); }
+.ib-opts { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
+.ib-opt { display: flex; align-items: center; gap: var(--s3); min-height: 48px; padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: 10px; cursor: pointer; }
+.ib-opt:hover { border-color: var(--edge); }
+.ib-opt:has(input:checked) { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.ib-opt input { flex: none; }
+.ib-opt-date { padding-left: 46px; }
+.ib-pick-list { display: flex; flex-direction: column; gap: var(--s2); max-height: 320px; overflow-y: auto; padding: 2px; }
+.ib-pick-main { display: flex; flex-direction: column; min-width: 0; font-size: 14px; line-height: 1.35; }
+.ib-pick-none { padding: var(--s2) 0; }
+
+/* ---------- Narrower conversations: the bar's actions fold into More, as on phones ---------- */
+@container ib-thread (max-width: 560px) {
+  .ib-act-book { display: none; }
+}
+/* Company becomes its icon (it keeps its name for screen readers), so the person's name stays whole */
+@container ib-thread (max-width: 520px) {
+  .ib-co-open, .ib-co-drawer { width: var(--control-s); padding: 0; }
+  .ib-co-open > span, .ib-co-drawer > span { display: none; }
+}
+@container ib-thread (max-width: 440px) {
+  .ib-act-done, .ib-send-hint, .ib-out-time { display: none; }
+  /* The suggestion keeps its words and buttons; the note and the third line go */
+  .ib-sug-note { display: none; }
+  .ib-sug:not(.is-open) .ib-sug-body { -webkit-line-clamp: 2; line-clamp: 2; }
+  .ib-composer:has(.ib-sug) .ib-textarea:placeholder-shown { height: 44px !important; }
+  .ib-out-head { grid-template-columns: 16px max-content minmax(0, 1fr); }
+  .ib-compose-foot > .btn-primary { margin-left: auto; }
+}
+
+/* Toasts sit just above the composer card (with the suggestion, or the line saying it can't send yet), never on
+   it, however tall it has grown. inbox.js measures the card's top into --ib-foot-top; the number is a fallback. */
+#app:has(.ib-app .ib-foot) ~ .toasts { bottom: calc(var(--ib-foot-top, 188px) + 12px); }
+
+/* The prototype's Screens button (not part of the product) would sit on Send when the panel isn't beside it */
+@media (min-width: 1320px) { #app:has(.ib-app:not(.has-panel) .ib-foot) > .proto-fab { bottom: calc(var(--ib-foot-top, 204px) + 12px); } }
+@media (min-width: 861px) and (max-width: 1319px) { #app:has(.ib-app .ib-foot) > .proto-fab { bottom: calc(var(--ib-foot-top, 204px) + 12px); } }
+
+/* ---------- Narrower windows: the company panel becomes a drawer ---------- */
+@media (max-width: 1319px) {
+  .ib-app, .ib-app.has-panel { grid-template-columns: var(--ib-list) minmax(0, 1fr); }
+  .ib-panel, .ib-co-open { display: none; }
+  .ib-co-drawer { display: inline-flex; }
+}
+@media (max-width: 1180px) { .ib-keys { display: none; } }
+
+/* ---------- Phones: one pane at a time, the composer above the tab bar ---------- */
+@media (max-width: 860px) {
+  /* The phone's top bar is 48px and the tab bar 61px */
+  .main:has(.ib-app) { height: calc(100dvh - 109px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); padding-bottom: 0; }
+  .ib-app, .ib-app.has-panel { grid-template-columns: minmax(0, 1fr); }
+  .ib-app.is-auto > .ib-thread { display: none; }
+  .ib-app.is-auto .ib-row[aria-current="true"] { background: transparent; --mark-cut: var(--paper); }
+  .ib-app.is-auto .ib-row[aria-current="true"]:hover { background: var(--hover); }
+  .ib-app.is-thread > .ib-list { display: none; }
+  .ib-list { border-right: 0; }
+  .ib-list .page-bar { min-height: 48px; padding: 6px 12px 6px var(--s4); }
+  .ib-search { max-width: none; }
+  .ib-tools { padding: 0 9px; }
+  .ib-filters { overflow-x: auto; scrollbar-width: none; }
+  .ib-filters::-webkit-scrollbar { display: none; }
+  .ib-rows { padding: 4px 6px 16px; }
+  .ib-row { padding: 12px 10px; }
+  .ib-keys, .ib-send-hint { display: none; }
+  /* Day one: the empty list, then what will land here */
+  .ib-app.is-empty { overflow-y: auto; grid-template-rows: none; grid-auto-rows: max-content; }
+  .ib-app.is-empty > .ib-thread { display: flex; border-top: 1px solid var(--line); }
+  .ib-app.is-empty .ib-rows { flex: none; overflow: visible; }
+  .ib-head-blank { display: none; }
+  .ib-blank { flex: none; overflow: visible; padding: var(--s5) var(--s4) var(--s8); }
+  /* The conversation: back and actions, then the name, then who they are */
+  .ib-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "back acts" "name name"; gap: 2px var(--s2); min-height: 0; padding: 2px var(--s4) 4px; border-bottom: 0; }
+  .ib-back { grid-area: back; justify-self: start; display: inline-flex; align-items: center; gap: 2px; min-height: 44px; padding: 0 12px 0 4px; margin-left: -8px; border-radius: var(--r-btn); color: var(--text); font-weight: 500; text-decoration: none; }
+  .ib-back:hover { background: var(--hover); }
+  .ib-name-row { grid-area: name; flex-wrap: wrap; }
+  .ib-acts { grid-area: acts; margin-right: -8px; }
+  /* Mark call booked and Mark done move into More, so the conversation keeps the room */
+  .ib-act-book, .ib-act-done { display: none; }
+  .ib-head .btn-sm { height: var(--control-m); }
+  .ib-head .btn-sm.btn-icon { width: var(--control-m); }
+  /* The back link and the actions have a row of their own here, so Company keeps its word */
+  .ib-head .ib-co-drawer { width: auto; padding: 0 10px; }
+  .ib-head .ib-co-drawer > span { display: inline; }
+  .ib-title { font-size: 18px; white-space: normal; overflow-wrap: anywhere; }
+  .ib-sub { flex-direction: column; align-items: flex-start; gap: 4px; min-height: 0; padding: 2px var(--s4) var(--s3); }
+  .ib-sub-main { white-space: normal; }
+  .ib-sub .ib-sep { display: none; }
+  .ib-sub .ib-type { display: block; }
+  .ib-msgs { padding: var(--s4) var(--s4) var(--s5); }
+  .ib-msg.is-in .ib-mail-body { font-size: 16px; }
+  .ib-out-time { display: none; }
+  .ib-out-head { grid-template-columns: 16px max-content minmax(0, 1fr); min-height: 44px; }
+  .ib-foot { padding: 0 var(--s4) var(--s3); }
+  .ib-textarea { min-height: 60px; max-height: 160px; font-size: 16px; }
+  .ib-compose-foot > .btn-primary { margin-left: auto; }
+  .ib-match-actions { flex-direction: column; align-items: stretch; }
+  /* Toasts clear the composer and the tab bar; the list keeps the shared spot */
+  #app:has(.ib-app.is-auto) ~ .toasts { bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
+  #app:has(.ib-app.is-thread .ib-foot) ~ .toasts { bottom: calc(var(--ib-foot-top, 236px) + 12px); }
+  /* The prototype's Screens button would sit on Send here; it shows again on the list */
+  #app:has(.ib-app.is-thread) > .proto-fab { display: none; }
+}
+@media (max-width: 420px) {
+  .ib-when-grid { grid-template-columns: minmax(0, 1fr); }
+  .ib-opt-date { padding-left: 0; }
+}
