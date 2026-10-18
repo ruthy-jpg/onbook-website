@@ -294,7 +294,7 @@
     const sel = focusId && 'selectionStart' in ae ? [ae.selectionStart, ae.selectionEnd] : null;
     const y = window.scrollY;
     app.innerHTML = shell(view, r);
-    document.title = `${view.title ? view.title + ' | ' : ''}Onbook`;
+    document.title = view.title ? `${view.title} | Onbook AI` : 'Onbook AI: AI outreach that books you sales meetings';
     OB.current = { route: r, view };
     if (opts.keepScroll) window.scrollTo(0, y);
     if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus({ preventScroll: true }); if (sel && el.setSelectionRange) try { el.setSelectionRange(sel[0], sel[1]); } catch (e) { /* not a text field */ } } }
