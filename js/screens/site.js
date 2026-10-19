@@ -978,6 +978,7 @@
     ['Unipile', "Connects customers' LinkedIn accounts to send and read messages", 'European Union'],
     ['Lead data vendor (to be confirmed)', 'Supplies business contact details: names, job titles and work emails', 'To be confirmed'],
     ['Stripe', 'Payments, invoices and tax', 'United States'],
+    ['Cloudflare', 'Privacy-friendly website analytics for onbook.ai: page views, country and device, with no cookies and no tracking of individuals', 'United States'],
     ['Resend', "Sends Onbook's own emails, such as sign-in links and alerts, never outreach", 'United States'],
   ];
 
