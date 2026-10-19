@@ -34,6 +34,8 @@
 <div id="overlay"></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
+<script>/* First-touch source for the waitlist: where the visit came from, kept in this browser only. */
+try{if(!localStorage.getItem('ob_first')){var q=new URLSearchParams(location.search),o={};['ref','utm_source','utm_medium','utm_campaign','utm_content'].forEach(function(k){if(q.get(k))o[k]=q.get(k).slice(0,80)});o.referrer=(document.referrer||'').slice(0,200);o.landing=location.pathname+location.hash.slice(0,60);localStorage.setItem('ob_first',JSON.stringify(o))}}catch(e){}</script>
 <script src="config.js"></script>
 <script src="js/core.js"></script>
 <script src="js/data.js"></script>

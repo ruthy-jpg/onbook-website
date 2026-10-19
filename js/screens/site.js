@@ -751,6 +751,15 @@
     }
   });
 
+  /* Context sent with a signup: first-touch source, timezone, language, screen. No IP, no cookies. */
+  function signupContext() {
+    let first = {};
+    try { first = JSON.parse(localStorage.getItem('ob_first') || '{}'); } catch (e) {}
+    let tz = '';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+    return Object.assign({}, first, { timezone: tz, language: navigator.language || '', screen: `${screen.width}x${screen.height}`, mobile: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'yes' : 'no' });
+  }
+
   OB.action('site-start', (form) => {
     const which = form.dataset.which || 'hero';
     const input = form.querySelector('input[name="email"]');
@@ -765,7 +774,7 @@
     if (!CFG.waitlistEndpoint) { done(); return; }
     /* Apps Script web app: a text/plain no-cors POST avoids the CORS preflight; the reply is opaque, so a sent request counts as joined. */
     fetch(CFG.waitlistEndpoint, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ email, _subject: 'Onbook waitlist signup', source: 'onbook.ai' }) })
+      body: JSON.stringify(Object.assign({ email, _subject: 'Onbook waitlist signup', source: 'onbook.ai' }, signupContext())) })
       .then(() => done()).catch(fail);
   });
   OB.action('site-join', () => {
@@ -981,6 +990,8 @@
           <p>For the people our customers contact, Onbook is the data controller. That means we decide how their details are found, used and protected, and we answer for it, whichever customer sent the message. You can reach us at privacy@onbook.ai.</p>`],
         ['What we collect about people we contact', `${ul(['Name, job title and employer', 'Work email address, and public profile links such as LinkedIn and X', "Your recent public posts on LinkedIn or X, if a customer's campaign comments on one", 'Public news about the company you work for, such as funding, launches, job posts or new offices, with its date and source', 'Messages sent to you through Onbook, and your replies'])}
           <p>We don't collect home addresses, personal phone numbers or anything about your private life. We never use health, lawsuits, layoffs, security incidents or personal matters as a reason to contact anyone.</p>`],
+        ['If you visit onbook.ai or join the waitlist', `<p>When you join the waitlist we keep your email address. With it we record where you found us (the page or link that sent you), your browser language and time zone, your screen size and whether you were on a phone. We use this to learn which channels work and which countries are interested. We don't store your IP address and the site sets no tracking cookies. Site visits are counted with privacy-friendly analytics that don't identify you.</p>
+          <p>If you join with a work email address, we may look up public details about your company and role, such as its name, size and industry, from business data providers. To have your waitlist details removed, use the <a href="#remove-me">Remove me page</a> or email privacy@onbook.ai.</p>`],
         ['Why we use it', `<p>To help a business contact the right person at another business about something relevant to their work. Our legal basis is legitimate interest: the contact is business to business, about your job, at low volume, and every email has a plain way to opt out.</p>
           <p>Onbook contacts one person per company at a time, and stops everyone at a company as soon as anyone there replies.</p>`],
         ['Where it comes from', `${ul(['Business contact data providers that license this information to us [provider to be confirmed]', 'Public sources: company websites, press releases, job posts, funding databases and public posts on LinkedIn and X', 'Our customers, when they import their own list of contacts'])}
