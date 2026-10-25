@@ -150,7 +150,7 @@
     </header></div>
     <main class="site-main" id="main">${view.html}</main>
     <footer class="site-foot"><div class="site-foot-inner">
-      <span>Onbook, from Surgence Labs</span>
+      <span>Onbook, built by <a href="https://surgence.io">Surgence Labs</a></span>
       <span>Built by <a href="https://julianstafford.xyz" rel="author">Julian Stafford</a>, Hadid Swati, and Vinh Nguyen</span>
       ${OB.socials('is-foot')}
       <a href="#pricing">Pricing</a><a href="#legal.privacy">Privacy</a><a href="#legal.terms">Terms</a><a href="#legal.dpa">Data agreement</a><a href="#legal.subprocessors">Subprocessors</a><a href="#remove-me">Remove me from Onbook</a>
